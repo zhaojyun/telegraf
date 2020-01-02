@@ -88,17 +88,17 @@ targets = {
 }
 
 supported_builds = {
-    'darwin': [ "amd64" ],
-    "windows": [ "amd64", "i386" ],
-    "linux": [ "amd64", "i386", "armhf", "armel", "arm64", "static_amd64", "s390x", "mipsel", "mips","mips64el"],
-    "freebsd": [ "amd64", "i386" ]
+  ##  'darwin': [ "amd64" ],
+  ##  "windows": [ "amd64", "i386" ],
+    "linux": [ "amd64", "i386", "armhf", "armel", "arm64", "static_amd64", "s390x", "mipsel", "mips","mips64el"]
+  ##  "freebsd": [ "amd64", "i386" ]
 }
 
 supported_packages = {
-    "darwin": [ "tar" ],
-    "linux": [ "deb", "rpm", "tar" ],
-    "windows": [ "zip" ],
-    "freebsd": [ "tar" ]
+   ## "darwin": [ "tar" ],
+    "linux": [ "deb", "rpm", "tar" ]
+   ## "windows": [ "zip" ],
+   ## "freebsd": [ "tar" ]
 }
 
 next_version = '1.13.0'
