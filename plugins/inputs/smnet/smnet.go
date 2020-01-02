@@ -136,7 +136,7 @@ func (s *SMNetIOStats) Gather(acc telegraf.Accumulator) error {
 		}
 
 		var ioDiyInfo SMIODiyInfo
-		ioDiyInfo.ip= ip
+		ioDiyInfo.ip = ip
 		ioDiyInfo.mask = mask
 		ioDiyInfo.gateway = gateway
 		ioDiyInfo.adminStatus = adminStatus
