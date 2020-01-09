@@ -2,9 +2,6 @@ package smcpu
 
 import (
 	"fmt"
-	"regexp"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/influxdata/telegraf"
@@ -19,12 +16,6 @@ type SMCPUStats struct {
 
 	PerCPU   bool `toml:"percpu"`
 	TotalCPU bool `toml:"totalcpu"`
-}
-
-type SMCpuInfo struct {
-	ModelName string
-	Cores     int32
-	Mhz       float64
 }
 
 func (_ *SMCPUStats) Description() string {
@@ -44,15 +35,10 @@ func (_ *SMCPUStats) SampleConfig() string {
 
 func (s *SMCPUStats) Gather(acc telegraf.Accumulator) error {
 
-	//获取逻辑cpu信息
-	cpuInfos, err := cpu.Info()
+	//执行lscpu，获取cpu核数等信息
+	lscpuinfo, err := ReadLscpuInfo()
 	if err != nil {
-		fmt.Println(err)
-	}
-
-	cpuInfosByName := map[string]cpu.InfoStat{}
-	for _, cpuInfo := range cpuInfos {
-		cpuInfosByName["cpu"+strconv.FormatInt(int64(cpuInfo.CPU), 10)] = cpuInfo
+		return fmt.Errorf("excute lscpu error: %s", err)
 	}
 
 	times, err := s.ps.CPUTimes(s.PerCPU, s.TotalCPU)
@@ -92,28 +78,17 @@ func (s *SMCPUStats) Gather(acc telegraf.Accumulator) error {
 			continue
 		}
 
-		var smcpuinfo SMCpuInfo
-		cinfo, ok := cpuInfosByName[cts.CPU]
-
-		if ok {
-			index := strings.Index(cinfo.ModelName, "@")
-			modleName := cinfo.ModelName
-			if index > 0 {
-				modleName = deleteExtraSpace(cinfo.ModelName[:index])
-			}
-			smcpuinfo.ModelName = modleName
-			smcpuinfo.Cores = cinfo.Cores
-			smcpuinfo.Mhz = cinfo.Mhz
-		}
-
 		fieldsG := map[string]interface{}{
-			"model_name":   smcpuinfo.ModelName,
-			"cores":        smcpuinfo.Cores,
-			"mhz":          smcpuinfo.Mhz,
-			"usage_active": 100 * (active - lastActive) / totalDelta,
-			"usage_user":   100 * (cts.User - lastCts.User - (cts.Guest - lastCts.Guest)) / totalDelta,
-			"usage_system": 100 * (cts.System - lastCts.System) / totalDelta,
-			"usage_idle":   100 * (cts.Idle - lastCts.Idle) / totalDelta,
+			"cpus":             lscpuinfo.CPUs,
+			"model_name":       lscpuinfo.ModelName,
+			"threads_per_core": lscpuinfo.ThreadsPerCore,
+			"cores_per_socket": lscpuinfo.CoresPerSocket,
+			"sockets":          lscpuinfo.Sockets,
+			"mhz":              lscpuinfo.Mhz,
+			"usage_active":     100 * (active - lastActive) / totalDelta,
+			"usage_user":       100 * (cts.User - lastCts.User - (cts.Guest - lastCts.Guest)) / totalDelta,
+			"usage_system":     100 * (cts.System - lastCts.System) / totalDelta,
+			"usage_idle":       100 * (cts.Idle - lastCts.Idle) / totalDelta,
 		}
 		acc.AddGauge("smcpu", fieldsG, tags, now)
 	}
@@ -145,25 +120,4 @@ func init() {
 			ps:       system.NewSystemPS(),
 		}
 	})
-}
-
-/*
- * 函数名：delete_extra_space(s string) string
- * 功  能:删除字符串中多余的空格(含tab)，有多个空格时，仅保留一个空格，同时将字符串中的tab换为空格
- * 参  数:s string:原始字符串
- * 返回值:string:删除多余空格后的字符串
- */
-func deleteExtraSpace(s string) string {
-	//删除字符串中的多余空格，有多个空格时，仅保留一个空格
-	s1 := strings.Replace(s, "	", " ", -1)       //替换tab为空格
-	regstr := "\\s{2,}"                          //两个及两个以上空格的正则表达式
-	reg, _ := regexp.Compile(regstr)             //编译正则表达式
-	s2 := make([]byte, len(s1))                  //定义字符数组切片
-	copy(s2, s1)                                 //将字符串复制到切片
-	spc_index := reg.FindStringIndex(string(s2)) //在字符串中搜索
-	for len(spc_index) > 0 {                     //找到适配项
-		s2 = append(s2[:spc_index[0]+1], s2[spc_index[1]:]...) //删除多余空格
-		spc_index = reg.FindStringIndex(string(s2))            //继续在字符串中搜索
-	}
-	return string(s2)
 }
