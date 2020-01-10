@@ -96,7 +96,7 @@ supported_builds = {
 
 supported_packages = {
     "darwin": [ "tar" ],
-    "linux": [ "deb", "rpm", "tar" ]
+    "linux": [ "deb", "rpm", "tar" ],
     "windows": [ "zip" ],
     "freebsd": [ "tar" ]
 }
