@@ -105,7 +105,7 @@ import (
 	//_ "github.com/influxdata/telegraf/plugins/inputs/nginx_vts"
 	//_ "github.com/influxdata/telegraf/plugins/inputs/nsq"
 	//_ "github.com/influxdata/telegraf/plugins/inputs/nsq_consumer"
-	//_ "github.com/influxdata/telegraf/plugins/inputs/nstat"
+	_ "github.com/influxdata/telegraf/plugins/inputs/nstat"
 	//_ "github.com/influxdata/telegraf/plugins/inputs/ntpq"
 	//_ "github.com/influxdata/telegraf/plugins/inputs/nvidia_smi"
 	//_ "github.com/influxdata/telegraf/plugins/inputs/openldap"
