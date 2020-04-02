@@ -4,9 +4,9 @@ defaults:
     working_directory: '/go/src/github.com/influxdata/telegraf'
     environment:
       GOFLAGS: -p=8
-  go-1_12: &go-1_12
-    docker:
-      - image: 'quay.io/influxdb/telegraf-ci:1.12.14'
+#  go-1_12: &go-1_12
+#    docker:
+#      - image: 'quay.io/influxdb/telegraf-ci:1.12.14'
   go-1_13: &go-1_13
     docker:
       - image: 'quay.io/influxdb/telegraf-ci:1.13.5'
@@ -31,34 +31,34 @@ jobs:
           paths:
             - '*'
 
-  test-go-1.12:
-    <<: [ *defaults, *go-1_12 ]
-    steps:
-      - attach_workspace:
-          at: '/go/src'
-      - run: 'make check'
-      - run: 'make test'
-  test-go-1.12-386:
-    <<: [ *defaults, *go-1_12 ]
-    steps:
-      - attach_workspace:
-          at: '/go/src'
-      - run: 'GOARCH=386 make check'
-      - run: 'GOARCH=386 make test'
+#  test-go-1.12:
+#    <<: [ *defaults, *go-1_12 ]
+#    steps:
+#      - attach_workspace:
+#          at: '/go/src'
+#      - run: 'make check'
+#      - run: 'make test'
+#  test-go-1.12-386:
+#    <<: [ *defaults, *go-1_12 ]
+#    steps:
+#      - attach_workspace:
+#          at: '/go/src'
+#      - run: 'GOARCH=386 make check'
+#      - run: 'GOARCH=386 make test'
   test-go-1.13:
     <<: [ *defaults, *go-1_13 ]
     steps:
       - attach_workspace:
           at: '/go/src'
       - run: 'make check'
-      - run: 'make test'
+#      - run: 'make test'
   test-go-1.13-386:
     <<: [ *defaults, *go-1_13 ]
     steps:
       - attach_workspace:
           at: '/go/src'
       - run: 'GOARCH=386 make check'
-      - run: 'GOARCH=386 make test'
+#      - run: 'GOARCH=386 make test'
 
   package:
     <<: [ *defaults, *go-1_13 ]
@@ -69,15 +69,15 @@ jobs:
       - store_artifacts:
           path: './build'
           destination: 'build'
-  release:
-    <<: [ *defaults, *go-1_13 ]
-    steps:
-      - attach_workspace:
-          at: '/go/src'
-      - run: 'make package-release'
-      - store_artifacts:
-          path: './build'
-          destination: 'build'
+#  release:
+#    <<: [ *defaults, *go-1_13 ]
+#    steps:
+#      - attach_workspace:
+#          at: '/go/src'
+#      - run: 'make package-release'
+#      - store_artifacts:
+#          path: './build'
+#          destination: 'build'
 #  nightly:
 #    <<: [ *defaults, *go-1_13 ]
 #    steps:
@@ -96,18 +96,18 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - 'test-go-1.12':
-          requires:
-            - 'deps'
-          filters:
-            tags:
-              only: /.*/
-      - 'test-go-1.12-386':
-          requires:
-            - 'deps'
-          filters:
-            tags:
-              only: /.*/
+#      - 'test-go-1.12':
+#          requires:
+#            - 'deps'
+#          filters:
+#            tags:
+#              only: /.*/
+#      - 'test-go-1.12-386':
+#          requires:
+#            - 'deps'
+#          filters:
+#            tags:
+#              only: /.*/
       - 'test-go-1.13':
           requires:
             - 'deps'
@@ -122,21 +122,21 @@ workflows:
               only: /.*/
       - 'package':
           requires:
-            - 'test-go-1.12'
-            - 'test-go-1.12-386'
+#            - 'test-go-1.12'
+#            - 'test-go-1.12-386'
             - 'test-go-1.13'
             - 'test-go-1.13-386'
-      - 'release':
-          requires:
-            - 'test-go-1.12'
-            - 'test-go-1.12-386'
-            - 'test-go-1.13'
-            - 'test-go-1.13-386'
-          filters:
-            tags:
-              only: /.*/
-            branches:
-              ignore: /.*/
+#      - 'release':
+#          requires:
+#            - 'test-go-1.12'
+#            - 'test-go-1.12-386'
+#            - 'test-go-1.13'
+#            - 'test-go-1.13-386'
+#          filters:
+#            tags:
+#              only: /.*/
+#            branches:
+#              ignore: /.*/
 #  nightly:
 #    jobs:
 #      - 'deps'
