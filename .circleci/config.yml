@@ -78,15 +78,15 @@ jobs:
       - store_artifacts:
           path: './build'
           destination: 'build'
-  nightly:
-    <<: [ *defaults, *go-1_13 ]
-    steps:
-      - attach_workspace:
-          at: '/go/src'
-      - run: 'make package-nightly'
-      - store_artifacts:
-          path: './build'
-          destination: 'build'
+#  nightly:
+#    <<: [ *defaults, *go-1_13 ]
+#    steps:
+#      - attach_workspace:
+#          at: '/go/src'
+#      - run: 'make package-nightly'
+#      - store_artifacts:
+#          path: './build'
+#          destination: 'build'
 
 workflows:
   version: 2
@@ -137,31 +137,31 @@ workflows:
               only: /.*/
             branches:
               ignore: /.*/
-  nightly:
-    jobs:
-      - 'deps'
-      - 'test-go-1.12':
-          requires:
-            - 'deps'
-      - 'test-go-1.12-386':
-          requires:
-            - 'deps'
-      - 'test-go-1.13':
-          requires:
-            - 'deps'
-      - 'test-go-1.13-386':
-          requires:
-            - 'deps'
-      - 'nightly':
-          requires:
-            - 'test-go-1.12'
-            - 'test-go-1.12-386'
-            - 'test-go-1.13'
-            - 'test-go-1.13-386'
-    triggers:
-      - schedule:
-          cron: "0 7 * * *"
-          filters:
-            branches:
-              only:
-                - master
+#  nightly:
+#    jobs:
+#      - 'deps'
+#      - 'test-go-1.12':
+#          requires:
+#            - 'deps'
+#      - 'test-go-1.12-386':
+#          requires:
+#            - 'deps'
+#      - 'test-go-1.13':
+#          requires:
+#            - 'deps'
+#      - 'test-go-1.13-386':
+#          requires:
+#            - 'deps'
+#      - 'nightly':
+#          requires:
+#            - 'test-go-1.12'
+#            - 'test-go-1.12-386'
+#            - 'test-go-1.13'
+#            - 'test-go-1.13-386'
+#    triggers:
+#      - schedule:
+#          cron: "0 7 * * *"
+#          filters:
+#            branches:
+#              only:
+#                - master
