@@ -3,6 +3,7 @@
 package systeminfo
 
 import (
+	"fmt"
 	"io/ioutil"
 	"strings"
 
