@@ -147,8 +147,7 @@ func (sw *Sm4pSocketWriter) Close() error {
 }
 
 func newSm4pSocketWriter() *Sm4pSocketWriter {
-	return &Sm4pSocketWriter{
-	}
+	return &Sm4pSocketWriter{}
 }
 
 func createObject(metric telegraf.Metric) map[string]interface{} {
@@ -175,5 +174,3 @@ func serialize(metric telegraf.Metric) ([]byte, error) {
 func init() {
 	outputs.Add("sm4p_socket_writer", func() telegraf.Output { return newSm4pSocketWriter() })
 }
-
-
