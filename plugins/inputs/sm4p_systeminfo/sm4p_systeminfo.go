@@ -11,8 +11,8 @@ import (
 )
 
 type Sm4pSysInfoStats struct {
-	ResourceType  string `toml:resource_type`
-	ResourceIndex string `json:"resource_index"`
+	ResourceType  string `toml:"resource_type"`
+	ResourceIndex string `toml:"resource_index"`
 }
 
 func (_ *Sm4pSysInfoStats) Description() string {
