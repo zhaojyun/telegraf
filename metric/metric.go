@@ -373,7 +373,9 @@ func convertField(v interface{}) interface{} {
 			return float64(*v)
 		}
 	default:
-		return nil
+		//zjy 传递指标数组
+		return v
+		//return nil
 	}
 	return nil
 }
