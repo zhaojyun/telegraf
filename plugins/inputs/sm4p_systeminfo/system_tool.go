@@ -10,10 +10,11 @@ import (
 
 var netNum = 0
 var isRead = false
-func NetInterfaceNum()  int{
+
+func NetInterfaceNum() int {
 
 	//只做一次读取
-	if isRead  {
+	if isRead {
 		return netNum
 	}
 
@@ -31,7 +32,7 @@ func NetInterfaceNum()  int{
 	grep.Stdout = &buffer // grep的输出为buffer
 
 	err := lspci.Start()
-	if err!=nil {
+	if err != nil {
 		//return netNum,fmt.Errorf("error getting list of interfaces: %s", err)
 	}
 	_ = grep.Start()
@@ -39,7 +40,7 @@ func NetInterfaceNum()  int{
 	_ = w.Close()
 	_ = grep.Wait()
 
-	sss:= strings.TrimSpace(buffer.String())
+	sss := strings.TrimSpace(buffer.String())
 
 	lines := strings.Split(strings.TrimSpace(sss), "\n")
 	isRead = true
