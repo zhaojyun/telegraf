@@ -12,7 +12,7 @@ import (
 
 type Sm4pSysInfoStats struct {
 	ResourceType  string `toml:resource_type`
-	ResourceIndex string   `json:"resource_index"`
+	ResourceIndex string `json:"resource_index"`
 }
 
 func (_ *Sm4pSysInfoStats) Description() string {
@@ -134,7 +134,7 @@ func (s *Sm4pSysInfoStats) Gather(acc telegraf.Accumulator) error {
 func init() {
 	inputs.Add("sm4p_systeminfo", func() telegraf.Input {
 		return &Sm4pSysInfoStats{
-			ResourceType: "0",
+			ResourceType:  "0",
 			ResourceIndex: "1",
 		}
 	})
